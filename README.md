@@ -5,7 +5,7 @@ In this repository you can find differents solutions that uses `NSProxy` as the 
 
 Right now, you can find solutions the following problems:
 
-#1. Setting & Getting & Commiting values
+#Setting & Getting & Commiting values
 
 Use the `AMProxyObjectCommiter` to create a proxy object that responds messages as a given object but where you can "set" and "get" properties and then "commit" them.
 
@@ -17,7 +17,6 @@ You will setup a proxy object commiter doing:
     // Creating the proxy object commiter
     AMProxyObjectCommiter *proxyObject = [AMProxyObjectCommiter alloc] __initWithObject:object];
   
-
 Because `AMProxyObjectCommiter` will forward all messages to the original object, you can even cast the instance to usit as a normal original object class.
 
     MyObject *commiterObject = (MyObject*)proxyObject;
@@ -39,7 +38,17 @@ Finally, you can commit the assignment just by calling:
     // Commit all changes
     [proxyObject __commitChanges];
     
+Also, you can check the current changes by calling:
 
+    NSDictionary *changes = [proxyObject __changes];
+    
+    // Set of keys that have been set to nil
+    NSSet *nillyfiedValues = [proxyObject valueForKey:AMProxyObjectCommiterNillyfiedValuesKey];
+    
+    // Dictionary of key-values with the new values
+    NSDictionary *changedValues = [proxyObject valueForKey:AMProxyObjectCommiterChangedValuesKey];
+    
+###Example of use
 To understand what is exactly happening, just check the following lines:
 
     // Creating object
@@ -65,18 +74,8 @@ To understand what is exactly happening, just check the following lines:
     NSLog(@"Name: %@",object.name); // $> Name: John
     NSLog(@"Name: %@",commiterObject.name); // $> Name: John
     NSLog(@"Name: %@",[commiterObject valueForKey:@"name"]); // $> Name: John
-    
-Also, you can check the current changes by calling:
-
-    NSDictionary *changes = [proxyObject __changes];
-    
-    // Set of keys that have been set to nil
-    NSSet *nillyfiedValues = [proxyObject valueForKey:AMProxyObjectCommiterNillyfiedValuesKey];
-    
-    // Dictionary of key-values with the new values
-    NSDictionary *changedValues = [proxyObject valueForKey:AMProxyObjectCommiterChangedValuesKey];
-  
-#2. Object Selector Call Tracking & Debugging
+      
+#Object Selector Call Tracking & Debugging
     
 This proxy class add a layer to track and manipulate messages to a given object. You will be able to be notified when a specific selector is called and even get the chance to cusotmize a specific behaviour by using blocks, forwarding calls, etc.
 
@@ -118,7 +117,7 @@ Finaly, because `AMProxySelectorHandler` is forwarding calls to the original obj
 
     MyObject *proxyObject = (MyObject*)selectorHandler;
 
-Example of use:
+###Example of use
 
     MyObject *object = [[MyObject alloc] init];
     AMProxySelectorHandler *selectorHandler = [AMProxySelectorHandler __proxyObject:object];
