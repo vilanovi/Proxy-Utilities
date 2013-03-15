@@ -76,8 +76,64 @@ Also, you can check the current changes by calling:
     // Dictionary of key-values with the new values
     NSDictionary *changedValues = [proxyObject valueForKey:AMProxyObjectCommiterChangedValuesKey];
   
-
+###2. Object Selector Call Tracking & Debugging
     
+This proxy class add a layer to track and manipulate messages to a given object. You will be able to be notified when a specific selector is called and even get the chance to cusotmize a specific behaviour by using blocks, forwarding calls, etc.
+
+To initialize your proxy object just do:
+
+    // Creating the original object
+    MyObject *object = [MyObject alloc] init];
+    
+    // Creating the proxy object
+    AMProxySelectorHandler *selectorHandler = [[AMProxySelectorHandler alloc] __initWithObject:object];
+    
+    // Also you can do it by:
+    AMProxySelectorHandler *selectorHandler = [AMProxySelectorHandler __proxyObject:object];
+
+Now you can track when a specific selector is called in the original object just by calling one of those methods:
+    
+    // Log a simple message (console)
+    [selectorHandler __logSelector:@selector(foo:)];
+    
+    // Log a customized message (console)
+    [selectorHandler __logSelector:@selector(foo:) andPrintMessage:@"Foo has been called now"];
+    
+    // Log a simple message (console) and throw an exception
+    [selectorHandler __logSelector:@selector(foo:) andThrowException:exception];
+    
+    // Log a simple message (console) and call a block
+    [selectorHandler __logSelector:@selector(foo:) andCallBlock:^(id object){
+        // Do some stuff here
+        // You can use the original "object" to do even more stuff
+    }];
+    
+    // Log a simple message (console) and redirect the call to a new target
+    [selectorHandler __logSelector:@selector(foo:) andRedirectToTarget:otherObject];
+    
+    // Log a simple message (console) and stop the call
+    [selectorHandler __avoidSelector:@selector(foo:)];
+
+Finaly, because `AMProxySelectorHandler` is forwarding calls to the original object, you can cast it to use it as a normal `MyObject` instance.
+
+    MyObject *proxyObject = (MyObject*)selectorHandler;
+
+Example of use:
+
+    MyObject *object = [MyObject alloc] init];
+    AMProxySelectorHandler *selectorHandler = [AMProxySelectorHandler __proxyObject:object];
+    
+    NSException *exception = [NSException exceptionWithName:@"DO NOT CALL FOO" reason:@"Foo is a deprecated method" userInfo:nil];
+    [selectorHandler __logSelector:@selector(foo:) andThrowException:exception];
+    
+    MyObject *proxyObject = (MyObject*)selectorHandler;
+    
+    
+    [object foo]; // <-- Foo will be called
+    [proxyObject foo]; // <--- Will raise exception
+    
+    
+
     
 
 
