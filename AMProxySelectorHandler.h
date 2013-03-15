@@ -48,7 +48,7 @@
  * @param selector The selector to track.
  * @param block The block to call.
  */
-- (void)__logSelector:(SEL)selector andCallBlock:(void (^)())block;
+- (void)__logSelector:(SEL)selector andCallBlock:(void (^)(id object))block;
 
 /*!
  * This method forwards the message specified by the given selector from the original to the tracked object to a new target.
