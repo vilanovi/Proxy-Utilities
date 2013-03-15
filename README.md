@@ -94,25 +94,25 @@ To initialize your proxy object just do:
 Now you can track when a specific selector is called in the original object just by calling one of those methods:
     
     // Log a simple message (console)
-    [selectorHandler __logSelector:@selector(foo:)];
+    [selectorHandler __logSelector:@selector(foo)];
     
     // Log a customized message (console)
-    [selectorHandler __logSelector:@selector(foo:) andPrintMessage:@"Foo has been called now"];
+    [selectorHandler __logSelector:@selector(foo) andPrintMessage:@"Foo has been called now"];
     
     // Log a simple message (console) and throw an exception
-    [selectorHandler __logSelector:@selector(foo:) andThrowException:exception];
+    [selectorHandler __logSelector:@selector(foo) andThrowException:exception];
     
     // Log a simple message (console) and call a block
-    [selectorHandler __logSelector:@selector(foo:) andCallBlock:^(id object){
+    [selectorHandler __logSelector:@selector(foo) andCallBlock:^(id object){
         // Do some stuff here
         // You can use the original "object" to do even more stuff
     }];
     
     // Log a simple message (console) and redirect the call to a new target
-    [selectorHandler __logSelector:@selector(foo:) andRedirectToTarget:otherObject];
+    [selectorHandler __logSelector:@selector(foo) andRedirectToTarget:otherObject];
     
     // Log a simple message (console) and stop the call
-    [selectorHandler __avoidSelector:@selector(foo:)];
+    [selectorHandler __avoidSelector:@selector(foo)];
 
 Finaly, because `AMProxySelectorHandler` is forwarding calls to the original object, you can cast it to use it as a normal `MyObject` instance.
 
@@ -124,7 +124,7 @@ Example of use:
     AMProxySelectorHandler *selectorHandler = [AMProxySelectorHandler __proxyObject:object];
     
     NSException *exception = [NSException exceptionWithName:@"DO NOT CALL FOO" reason:@"Foo is a deprecated method" userInfo:nil];
-    [selectorHandler __logSelector:@selector(foo:) andThrowException:exception];
+    [selectorHandler __logSelector:@selector(foo) andThrowException:exception];
     
     MyObject *proxyObject = (MyObject*)selectorHandler;
     
