@@ -83,7 +83,7 @@ This proxy class add a layer to track and manipulate messages to a given object.
 To initialize your proxy object just do:
 
     // Creating the original object
-    MyObject *object = [MyObject alloc] init];
+    MyObject *object = [[MyObject alloc] init];
     
     // Creating the proxy object
     AMProxySelectorHandler *selectorHandler = [[AMProxySelectorHandler alloc] __initWithObject:object];
@@ -120,7 +120,7 @@ Finaly, because `AMProxySelectorHandler` is forwarding calls to the original obj
 
 Example of use:
 
-    MyObject *object = [MyObject alloc] init];
+    MyObject *object = [[MyObject alloc] init];
     AMProxySelectorHandler *selectorHandler = [AMProxySelectorHandler __proxyObject:object];
     
     NSException *exception = [NSException exceptionWithName:@"DO NOT CALL FOO" reason:@"Foo is a deprecated method" userInfo:nil];
