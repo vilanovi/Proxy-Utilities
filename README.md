@@ -128,11 +128,13 @@ Example of use:
     
     MyObject *proxyObject = (MyObject*)selectorHandler;
     
+    [object fii]; // <-- Does the same as the next line
+    [proxyObject fii]; // <-- Does the same as the previous line
     
     [object foo]; // <-- Foo will be called
     [proxyObject foo]; // <--- Will raise exception
     
-    
+
 
     
 
