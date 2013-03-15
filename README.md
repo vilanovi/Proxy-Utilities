@@ -1,11 +1,11 @@
 Proxy-Utilities
 ===============
 
-In this repository you can find differents solutions that uses NSProxy as the main pattern to solve current problems.
+In this repository you can find differents solutions that uses `NSProxy` as the main pattern to solve current problems.
 
 Right now, you can find solutions the following problems:
 
-###1. Setting & Getting & Commiting values
+#1. Setting & Getting & Commiting values
 
 Use the `AMProxyObjectCommiter` to create a proxy object that responds messages as a given object but where you can "set" and "get" properties and then "commit" them.
 
@@ -76,7 +76,7 @@ Also, you can check the current changes by calling:
     // Dictionary of key-values with the new values
     NSDictionary *changedValues = [proxyObject valueForKey:AMProxyObjectCommiterChangedValuesKey];
   
-###2. Object Selector Call Tracking & Debugging
+#2. Object Selector Call Tracking & Debugging
     
 This proxy class add a layer to track and manipulate messages to a given object. You will be able to be notified when a specific selector is called and even get the chance to cusotmize a specific behaviour by using blocks, forwarding calls, etc.
 
