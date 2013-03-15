@@ -73,8 +73,8 @@ typedef enum
         else if (logType == AMProxySelectorObserverTypeBlock)
         {
             NSLog(@"%@",logString);
-            void (^block)() = array[1];
-            block();
+            void (^block)(id object) = array[1];
+            block(_object);
         }
         else if (logType == AMProxySelectorObserverTypeRedirectTarget)
         {
@@ -136,7 +136,7 @@ typedef enum
         [_logSelectors setObject:@[@(AMProxySelectorObserverTypeException), exception] forKey:[self __keyForSelector:selector]];
 }
 
-- (void)__logSelector:(SEL)selector andCallBlock:(void (^)())block
+- (void)__logSelector:(SEL)selector andCallBlock:(void (^)(id object))block
 {
     if (selector == NULL)
         return;
