@@ -64,4 +64,9 @@ extern NSString * const AMProxyObjectCommiterChangedValuesKey;
  */
 - (id)__originalValueForKey:(NSString*)key;
 
+/*!
+ * TODO
+ */
+- (void)__trackSetSelector:(SEL)setSelector forGetSelector:(SEL)getSelector;
+
 @end

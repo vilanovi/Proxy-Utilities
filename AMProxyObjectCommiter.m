@@ -14,6 +14,10 @@ NSString * const AMProxyObjectCommiterChangedValuesKey = @"AMProxyObjectCommiter
     id _object;
     NSMutableDictionary *_keyedValues;
     NSMutableSet *_nilValues;
+    
+    NSMutableSet *_trackedGetSelectors;
+    NSMutableSet *_trackedSetSelectors;
+    NSMutableDictionary *_trackedSelectorsMap;
 }
 
 - (id)__initWithObject:(id)object
@@ -23,6 +27,10 @@ NSString * const AMProxyObjectCommiterChangedValuesKey = @"AMProxyObjectCommiter
         _object = object;
         _keyedValues = [NSMutableDictionary dictionary];
         _nilValues = [NSMutableSet set];
+        
+        _trackedSetSelectors = [NSMutableSet set];
+        _trackedGetSelectors = [NSMutableSet set];
+        _trackedSelectorsMap = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -42,7 +50,7 @@ NSString * const AMProxyObjectCommiterChangedValuesKey = @"AMProxyObjectCommiter
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation
-{    
+{
     if (invocation.methodSignature == [_object methodSignatureForSelector:@selector(setValue:forKey:)])
     {
         __unsafe_unretained id tempValue = nil;
@@ -99,6 +107,24 @@ NSString * const AMProxyObjectCommiterChangedValuesKey = @"AMProxyObjectCommiter
             [invocation invoke];
         }
     }
+    else if ([_trackedGetSelectors containsObject:[NSValue valueWithPointer:invocation.selector]])
+    {
+        [invocation setTarget:_keyedValues];
+        NSValue *value = [NSValue valueWithPointer:invocation.selector];
+        [invocation setArgument:&value atIndex:2];
+        [invocation invoke];
+    }
+    else if ([_trackedSetSelectors containsObject:[NSValue valueWithPointer:invocation.selector]])
+    {
+        __unsafe_unretained id tempValue = nil;
+        [invocation getArgument:&tempValue atIndex:2];
+        id value = tempValue;
+        
+        [_keyedValues setValue:value forKey:[_trackedSelectorsMap objectForKey:[NSValue valueWithPointer:invocation.selector]]];
+        
+        [invocation setTarget:nil];
+        [invocation invoke];
+    }
     else
     {
         [invocation setTarget:_object];
@@ -107,7 +133,7 @@ NSString * const AMProxyObjectCommiterChangedValuesKey = @"AMProxyObjectCommiter
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector
-{    
+{
     BOOL responds = [super respondsToSelector:aSelector];
     
     if (!responds)
@@ -163,13 +189,20 @@ NSString * const AMProxyObjectCommiterChangedValuesKey = @"AMProxyObjectCommiter
     
     if ([_nilValues containsObject:key])
         return [NSNull null];
-
+    
     return nil;
 }
 
 - (id)__originalValueForKey:(NSString*)key
 {
     return [_object valueForKey:key];
+}
+
+- (void)__trackSetSelector:(SEL)setSelector forGetSelector:(SEL)getSelector
+{
+    [_trackedSetSelectors addObject:[NSValue valueWithPointer:setSelector]];
+    [_trackedGetSelectors addObject:[NSValue valueWithPointer:getSelector]];
+    [_trackedSelectorsMap setObject:[NSValue valueWithPointer:getSelector] forKey:[NSValue valueWithPointer:setSelector]];
 }
 
 @end
