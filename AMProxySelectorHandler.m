@@ -24,14 +24,14 @@
 
 #import "AMProxySelectorHandler.h"
 
-typedef enum
+typedef  NS_ENUM(NSUInteger, AMProxySelectorObserverType)
 {
     AMProxySelectorObserverTypeEmpty,
     AMProxySelectorObserverTypeString,
     AMProxySelectorObserverTypeException,
     AMProxySelectorObserverTypeBlock,
     AMProxySelectorObserverTypeRedirectTarget
-} AMProxySelectorObserverType;
+};
 
 @implementation AMProxySelectorHandler
 {
